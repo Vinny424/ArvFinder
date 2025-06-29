@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: arvfinder
+      POSTGRES_USER: arvfinder
+      POSTGRES_PASSWORD: arvfinder_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    networks:
+      - arvfinder-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://arvfinder:arvfinder_dev@postgres:5432/arvfinder?sslmode=disable
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - PORT=8080
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+    networks:
+      - arvfinder-network
+
+  frontend:
+    build:
+      context: ./frontend/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8080/api/v1
+    volumes:
+      - ./frontend/frontend:/app
+      - /app/node_modules
+    networks:
+      - arvfinder-network
+
+volumes:
+  postgres_data:
+
+networks:
+  arvfinder-network:
+    driver: bridge
