@@ -84,6 +84,7 @@ func main() {
 			payments.GET("/plans", stripeHandler.GetSubscriptionPlans)
 			payments.POST("/create-subscription", stripeHandler.CreateSubscription)
 			payments.POST("/create-payment-intent", stripeHandler.CreatePaymentIntent)
+			payments.POST("/create-report-payment", stripeHandler.CreateReportPayment)
 			payments.POST("/cancel-subscription", stripeHandler.CancelSubscription)
 			payments.POST("/update-subscription", stripeHandler.UpdateSubscription)
 			payments.GET("/subscription-status", stripeHandler.GetSubscriptionStatus)

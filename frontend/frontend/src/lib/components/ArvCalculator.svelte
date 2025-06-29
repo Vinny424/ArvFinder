@@ -48,160 +48,237 @@
 	}
 </script>
 
-<div class="bg-white rounded-lg shadow-lg p-6">
-	<h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-		<svg width="24" height="24" viewBox="0 0 24 24" class="mr-2 text-blue-600">
-			<path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-		</svg>
-		ARV Calculator
-	</h2>
+<div class="space-y-8">
+	<div class="text-center">
+		<h3 class="text-2xl font-bold text-gray-900 mb-2">ARV Investment Calculator</h3>
+		<p class="text-gray-600">Enter property details for comprehensive investment analysis</p>
+	</div>
 	
-	<form on:submit|preventDefault={calculateArv} class="space-y-6">
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-			<div>
-				<label for="purchasePrice" class="block text-sm font-medium text-gray-700 mb-2">
-					Purchase Price
-				</label>
-				<input
-					id="purchasePrice"
-					type="number"
-					bind:value={purchasePrice}
-					placeholder="150000"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
-			</div>
-			
-			<div>
-				<label for="rehabCost" class="block text-sm font-medium text-gray-700 mb-2">
-					Rehab Cost
-				</label>
-				<input
-					id="rehabCost"
-					type="number"
-					bind:value={rehabCost}
-					placeholder="25000"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
-			</div>
-			
-			<div>
-				<label for="arv" class="block text-sm font-medium text-gray-700 mb-2">
-					After Repair Value (ARV)
-				</label>
-				<input
-					id="arv"
-					type="number"
-					bind:value={arv}
-					placeholder="250000"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
-			</div>
-			
-			<div>
-				<label for="holdingCosts" class="block text-sm font-medium text-gray-700 mb-2">
-					Holding Costs
-				</label>
-				<input
-					id="holdingCosts"
-					type="number"
-					bind:value={holdingCosts}
-					placeholder="5000"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
-			</div>
-		</div>
-		
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-			<div>
-				<label for="closingCosts" class="block text-sm font-medium text-gray-700 mb-2">
-					Closing Costs
-				</label>
-				<input
-					id="closingCosts"
-					type="number"
-					bind:value={closingCosts}
-					placeholder="3000"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
-			</div>
-			
-			<div>
-				<label for="financingCosts" class="block text-sm font-medium text-gray-700 mb-2">
-					Financing Costs (Optional)
-				</label>
-				<input
-					id="financingCosts"
-					type="number"
-					bind:value={financingCosts}
-					placeholder="2000"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-				/>
+	<form on:submit|preventDefault={calculateArv} class="space-y-8">
+		<!-- Primary Investment Details -->
+		<div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
+			<h4 class="text-lg font-semibold text-gray-900 mb-4">Property Investment Details</h4>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div>
+					<label for="purchasePrice" class="block text-sm font-medium text-gray-700 mb-2">
+						Purchase Price
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="purchasePrice"
+							type="number"
+							bind:value={purchasePrice}
+							placeholder="150,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+				
+				<div>
+					<label for="arv" class="block text-sm font-medium text-gray-700 mb-2">
+						After Repair Value (ARV)
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="arv"
+							type="number"
+							bind:value={arv}
+							placeholder="250,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+				
+				<div>
+					<label for="rehabCost" class="block text-sm font-medium text-gray-700 mb-2">
+						Rehab Cost
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="rehabCost"
+							type="number"
+							bind:value={rehabCost}
+							placeholder="25,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+				
+				<div>
+					<label for="holdingCosts" class="block text-sm font-medium text-gray-700 mb-2">
+						Holding Costs
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="holdingCosts"
+							type="number"
+							bind:value={holdingCosts}
+							placeholder="5,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 		
-		<div>
-			<label for="sellingCosts" class="block text-sm font-medium text-gray-700 mb-2">
-				Selling Costs (Optional)
-			</label>
-			<input
-				id="sellingCosts"
-				type="number"
-				bind:value={sellingCosts}
-				placeholder="15000"
-				class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-			/>
+		<!-- Additional Costs -->
+		<div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
+			<h4 class="text-lg font-semibold text-gray-900 mb-4">Additional Costs</h4>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div>
+					<label for="closingCosts" class="block text-sm font-medium text-gray-700 mb-2">
+						Closing Costs
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="closingCosts"
+							type="number"
+							bind:value={closingCosts}
+							placeholder="3,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+				
+				<div>
+					<label for="financingCosts" class="block text-sm font-medium text-gray-700 mb-2">
+						Financing Costs
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="financingCosts"
+							type="number"
+							bind:value={financingCosts}
+							placeholder="2,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+				
+				<div>
+					<label for="sellingCosts" class="block text-sm font-medium text-gray-700 mb-2">
+						Selling Costs
+					</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+						<input
+							id="sellingCosts"
+							type="number"
+							bind:value={sellingCosts}
+							placeholder="15,000"
+							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		{#if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-				{error}
+			<div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+				<div class="flex">
+					<svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+					</svg>
+					<p class="text-red-700 font-medium">{error}</p>
+				</div>
 			</div>
 		{/if}
 		
-		<button
-			type="submit"
-			disabled={isCalculating}
-			class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-		>
-			{isCalculating ? 'Calculating...' : 'Calculate ARV'}
-		</button>
+		<div class="text-center">
+			<button
+				type="submit"
+				disabled={isCalculating}
+				class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-12 py-4 rounded-2xl font-semibold text-lg shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+			>
+				{#if isCalculating}
+					<div class="flex items-center justify-center">
+						<svg class="animate-spin w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+						</svg>
+						Analyzing Property...
+					</div>
+				{:else}
+					<div class="flex items-center justify-center">
+						<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+						</svg>
+						Run Complete Analysis
+					</div>
+				{/if}
+			</button>
+		</div>
 	</form>
 	
 	<!-- Live Preview (shows immediate calculations) -->
 	{#if arv > 0 && !calculationResult}
-		<div class="mt-8 p-6 bg-gray-50 rounded-lg">
-			<h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Preview</h3>
+		<div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
+			<div class="flex items-center mb-4">
+				<div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center mr-3">
+					<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+					</svg>
+				</div>
+				<h3 class="text-lg font-semibold text-gray-900">Quick Preview</h3>
+			</div>
 			
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div class="bg-white p-4 rounded-lg">
-					<div class="text-sm text-gray-600">70% Rule Max Offer</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+				<div class="bg-white/80 backdrop-blur p-4 rounded-xl border border-white/50">
+					<div class="text-sm text-gray-600 mb-1">70% Rule Max Offer</div>
 					<div class="text-xl font-bold text-blue-600">${maxOffer.toLocaleString()}</div>
-					<div class="text-xs {is70RuleGood ? 'text-green-600' : 'text-red-600'}">
-						{is70RuleGood ? '✓ Meets 70% Rule' : '✗ Exceeds 70% Rule'}
+					<div class="text-xs {is70RuleGood ? 'text-green-600' : 'text-red-600'} flex items-center mt-1">
+						{#if is70RuleGood}
+							<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+							</svg>
+							Meets 70% Rule
+						{:else}
+							<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+							</svg>
+							Exceeds 70% Rule
+						{/if}
 					</div>
 				</div>
 				
-				<div class="bg-white p-4 rounded-lg">
-					<div class="text-sm text-gray-600">Potential Profit</div>
+				<div class="bg-white/80 backdrop-blur p-4 rounded-xl border border-white/50">
+					<div class="text-sm text-gray-600 mb-1">Potential Profit</div>
 					<div class="text-xl font-bold {potentialProfit >= 0 ? 'text-green-600' : 'text-red-600'}">
 						${potentialProfit.toLocaleString()}
 					</div>
-					<div class="text-xs text-gray-500">
+					<div class="text-xs text-gray-500 mt-1">
 						{profitMargin.toFixed(1)}% margin
 					</div>
 				</div>
 			</div>
 			
-			<div class="mt-4 text-center">
-				<p class="text-sm text-gray-600">Click "Calculate ARV" for comprehensive analysis</p>
+			<div class="text-center bg-white/60 rounded-xl p-3">
+				<p class="text-sm text-gray-600 flex items-center justify-center">
+					<svg class="w-4 h-4 mr-1 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+					</svg>
+					Run complete analysis for detailed investment recommendations
+				</p>
 			</div>
 		</div>
 	{/if}
 	
 	<!-- Detailed Results (from API) -->
 	{#if calculationResult}
-		<div class="mt-8 p-6 bg-gray-50 rounded-lg">
-			<h3 class="text-lg font-semibold text-gray-900 mb-4">Comprehensive Analysis</h3>
+		<div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+			<div class="flex items-center mb-6">
+				<div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-3">
+					<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+					</svg>
+				</div>
+				<h3 class="text-xl font-bold text-gray-900">Investment Analysis Complete</h3>
+			</div>
 			
 			<!-- Key Metrics -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

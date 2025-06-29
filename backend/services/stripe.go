@@ -145,8 +145,6 @@ func (s *StripeService) CreateSubscription(customerID, priceID string) (*stripe.
 		},
 		// Ensure subscription is set to automatically collect payment
 		CollectionMethod: stripe.String("charge_automatically"),
-		// Set billing cycle anchor to the current time
-		BillingCycleAnchor: stripe.Int64(0), // 0 means now
 	}
 
 	params.AddExpand("latest_invoice.payment_intent")

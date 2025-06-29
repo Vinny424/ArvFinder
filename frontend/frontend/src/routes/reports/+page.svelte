@@ -1,5 +1,26 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
+	import ReportGenerator from '$lib/components/ReportGenerator.svelte';
+	
+	// Demo property data - in real app this would come from the ARV calculator
+	const demoPropertyData = {
+		id: 'demo_property_123',
+		address: '123 Main St, Denver, CO',
+		purchase_price: 180000,
+		arv: 250000,
+		rehab_cost: 25000,
+		holding_costs: 5000,
+		closing_costs: 3000,
+		profit_margin: 15.8,
+		roi: 23.5
+	};
+	
+	// This would come from user authentication
+	let userTier = 'starter'; // Can be changed to test different tiers
+	
+	function setUserTier(tier: string) {
+		userTier = tier;
+	}
 </script>
 
 <svelte:head>
@@ -17,6 +38,33 @@
 			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
 				Generate professional reports for your property analysis and share with partners, lenders, or team members.
 			</p>
+			
+			<!-- Demo: User tier selector -->
+			<div class="mt-6 flex justify-center space-x-4">
+				<button 
+					on:click={() => setUserTier('starter')}
+					class="px-4 py-2 rounded-lg {userTier === 'starter' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}"
+				>
+					Starter User
+				</button>
+				<button 
+					on:click={() => setUserTier('professional')}
+					class="px-4 py-2 rounded-lg {userTier === 'professional' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}"
+				>
+					Professional User
+				</button>
+				<button 
+					on:click={() => setUserTier('enterprise')}
+					class="px-4 py-2 rounded-lg {userTier === 'enterprise' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}"
+				>
+					Enterprise User
+				</button>
+			</div>
+		</div>
+		
+		<!-- Live Report Generator -->
+		<div class="max-w-2xl mx-auto mb-12">
+			<ReportGenerator propertyData={demoPropertyData} {userTier} />
 		</div>
 		
 		<!-- Report Types -->
