@@ -21,6 +21,7 @@ func main() {
 	// Initialize handlers
 	arvHandler := handlers.NewArvHandler()
 	stripeHandler := handlers.NewStripeHandler(stripeSecretKey)
+	propertyHandler := handlers.NewPropertyHandler()
 
 	// CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -77,6 +78,13 @@ func main() {
 			arv.POST("/cap-rate", arvHandler.CalculateCapRate)
 			arv.POST("/estimate-from-comps", arvHandler.EstimateARVFromComps)
 		}
+
+		// Property estimate routes
+		api.POST("/property-estimate", propertyHandler.GetPropertyEstimate)
+		api.POST("/property-history", propertyHandler.GetPropertyHistory)
+		api.POST("/address-suggestions", propertyHandler.GetAddressSuggestions)
+		api.POST("/geocode-address", propertyHandler.GeocodeAddress)
+		api.GET("/property-search", propertyHandler.SearchProperties)
 
 		// Stripe payment routes
 		payments := api.Group("/payments")

@@ -8,6 +8,8 @@
 	let closingCosts = 0;
 	let financingCosts = 0;
 	let sellingCosts = 0;
+	let downPayment = 0;
+	let loanType = 'conventional'; // 'conventional', 'rehab-loan', 'cash'
 	
 	let calculationResult: ArvCalculationResult | null = null;
 	let isCalculating = false;
@@ -19,6 +21,18 @@
 	$: potentialProfit = arv - totalInvestment;
 	$: profitMargin = totalInvestment > 0 ? (potentialProfit / totalInvestment) * 100 : 0;
 	$: is70RuleGood = purchasePrice <= maxOffer;
+	
+	// Updated ROI calculation based on actual cash invested
+	$: actualCashInvested = (() => {
+		if (loanType === 'cash') {
+			return totalInvestment; // All cash purchase
+		} else if (loanType === 'rehab-loan') {
+			return downPayment; // Down payment only (rehab included in loan)
+		} else {
+			return downPayment + rehabCost; // Down payment + rehab costs
+		}
+	})();
+	$: actualROI = actualCashInvested > 0 ? (potentialProfit / actualCashInvested) * 100 : 0;
 	
 	async function calculateArv() {
 		if (!purchasePrice || !arv) {
@@ -45,6 +59,26 @@
 		} finally {
 			isCalculating = false;
 		}
+	}
+	
+	function estimateCosts() {
+		if (!purchasePrice || !arv) {
+			error = 'Please enter purchase price and ARV first to estimate costs';
+			return;
+		}
+		
+		// Rough cost estimates based on industry standards
+		const estimatedClosingCosts = Math.round(purchasePrice * 0.025); // 2.5% of purchase price
+		const estimatedFinancingCosts = Math.round(purchasePrice * 0.015); // 1.5% for loan fees
+		const estimatedSellingCosts = Math.round(arv * 0.08); // 8% of ARV (6% realtor + 2% other)
+		
+		// Update the values
+		closingCosts = estimatedClosingCosts;
+		financingCosts = estimatedFinancingCosts;
+		sellingCosts = estimatedSellingCosts;
+		
+		// Clear any previous errors
+		error = '';
 	}
 </script>
 
@@ -125,6 +159,57 @@
 			</div>
 		</div>
 		
+		<!-- Financing Details -->
+		<div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+			<h4 class="text-lg font-semibold text-gray-900 mb-4">Financing Details</h4>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div>
+					<label for="loanType" class="block text-sm font-medium text-gray-700 mb-2">
+						Loan Type
+					</label>
+					<select
+						id="loanType"
+						bind:value={loanType}
+						class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+					>
+						<option value="conventional">Conventional (Purchase Only)</option>
+						<option value="rehab-loan">Rehab Loan (Purchase + Repair)</option>
+						<option value="cash">All Cash Purchase</option>
+					</select>
+					<p class="text-xs text-gray-500 mt-1">
+						{#if loanType === 'conventional'}
+							Down payment + rehab costs out of pocket
+						{:else if loanType === 'rehab-loan'}
+							Down payment only (rehab financed)
+						{:else}
+							No financing, all cash investment
+						{/if}
+					</p>
+				</div>
+				
+				{#if loanType !== 'cash'}
+					<div>
+						<label for="downPayment" class="block text-sm font-medium text-gray-700 mb-2">
+							Down Payment
+						</label>
+						<div class="relative">
+							<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+							<input
+								id="downPayment"
+								type="number"
+								bind:value={downPayment}
+								placeholder={Math.round(purchasePrice * 0.2).toLocaleString()}
+								class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+							/>
+						</div>
+						<p class="text-xs text-gray-500 mt-1">
+							Suggested: 20% = ${Math.round(purchasePrice * 0.2).toLocaleString()}
+						</p>
+					</div>
+				{/if}
+			</div>
+		</div>
+		
 		<!-- Additional Costs -->
 		<div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
 			<h4 class="text-lg font-semibold text-gray-900 mb-4">Additional Costs</h4>
@@ -174,6 +259,33 @@
 							placeholder="15,000"
 							class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
 						/>
+					</div>
+				</div>
+			</div>
+			
+			<div class="mt-6 text-center">
+				<button
+					type="button"
+					on:click={estimateCosts}
+					class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg transform hover:scale-105"
+				>
+					<div class="flex items-center justify-center">
+						<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+						</svg>
+						Estimate Additional Costs
+					</div>
+				</button>
+				<div class="mt-3 text-xs text-amber-700 bg-amber-50 rounded-lg p-3 border border-amber-200">
+					<div class="flex items-start">
+						<svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+						</svg>
+						<div>
+							<p class="font-medium">Rough Estimates Only</p>
+							<p>Closing: ~2.5% of purchase • Financing: ~1.5% of purchase • Selling: ~8% of ARV</p>
+							<p>Always verify with professionals for accurate costs.</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -247,12 +359,12 @@
 				</div>
 				
 				<div class="bg-white/80 backdrop-blur p-4 rounded-xl border border-white/50">
-					<div class="text-sm text-gray-600 mb-1">Potential Profit</div>
-					<div class="text-xl font-bold {potentialProfit >= 0 ? 'text-green-600' : 'text-red-600'}">
-						${potentialProfit.toLocaleString()}
+					<div class="text-sm text-gray-600 mb-1">Cash-on-Cash ROI</div>
+					<div class="text-xl font-bold {actualROI >= 0 ? 'text-green-600' : 'text-red-600'}">
+						{actualROI.toFixed(1)}%
 					</div>
 					<div class="text-xs text-gray-500 mt-1">
-						{profitMargin.toFixed(1)}% margin
+						Cash invested: ${actualCashInvested.toLocaleString()}
 					</div>
 				</div>
 			</div>
