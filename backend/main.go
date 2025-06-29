@@ -4,12 +4,27 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"arvfinder-backend/database"
 	"arvfinder-backend/handlers"
+	"arvfinder-backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// Initialize database
+	db, err := database.InitDB()
+	if err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+	defer database.CloseDB()
+
+	// Run database migrations
+	err = database.RunMigrations(db)
+	if err != nil {
+		log.Fatal("Failed to run migrations:", err)
+	}
+
 	r := gin.Default()
 
 	// Get Stripe secret key from environment or use default for development
@@ -22,6 +37,11 @@ func main() {
 	arvHandler := handlers.NewArvHandler()
 	stripeHandler := handlers.NewStripeHandler(stripeSecretKey)
 	propertyHandler := handlers.NewPropertyHandler()
+	authHandler := handlers.NewAuthHandler()
+
+	// Security middleware
+	r.Use(middleware.SecurityHeadersMiddleware())
+	r.Use(middleware.RateLimitMiddleware())
 
 	// CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -51,14 +71,18 @@ func main() {
 		// Authentication routes
 		auth := api.Group("/auth")
 		{
-			auth.POST("/login", loginHandler)
-			auth.POST("/register", registerHandler)
-			auth.POST("/refresh", refreshTokenHandler)
+			auth.POST("/login", authHandler.Login)
+			auth.POST("/register", authHandler.Register)
+			auth.POST("/verify-2fa", authHandler.Verify2FA)
+			auth.POST("/refresh", refreshTokenHandler) // TODO: Implement
+			auth.POST("/logout", logoutHandler)        // TODO: Implement
+			auth.POST("/forgot-password", forgotPasswordHandler) // TODO: Implement
+			auth.POST("/reset-password", resetPasswordHandler)   // TODO: Implement
 		}
 
 		// Property routes (protected)
 		properties := api.Group("/properties")
-		properties.Use(authMiddleware())
+		properties.Use(middleware.AuthMiddleware())
 		{
 			properties.GET("/", getPropertiesHandler)
 			properties.POST("/", createPropertyHandler)
@@ -105,17 +129,21 @@ func main() {
 	log.Fatal(r.Run(":8080"))
 }
 
-// Placeholder handlers - will be implemented later
-func loginHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Login endpoint - to be implemented"})
-}
-
-func registerHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Register endpoint - to be implemented"})
-}
-
+// TODO: Implement these handlers
 func refreshTokenHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Refresh token endpoint - to be implemented"})
+}
+
+func logoutHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "Logout endpoint - to be implemented"})
+}
+
+func forgotPasswordHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "Forgot password endpoint - to be implemented"})
+}
+
+func resetPasswordHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "Reset password endpoint - to be implemented"})
 }
 
 func getPropertiesHandler(c *gin.Context) {
@@ -156,10 +184,3 @@ func deletePropertyHandler(c *gin.Context) {
 }
 
 
-// Auth middleware placeholder
-func authMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// For now, just continue - will implement JWT auth later
-		c.Next()
-	}
-}

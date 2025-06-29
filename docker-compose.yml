@@ -24,6 +24,10 @@ services:
       - JWT_SECRET=your-super-secret-jwt-key-change-in-production
       - PORT=8080
       - GOOGLE_MAPS_API_KEY=AIzaSyCIey4mNMzWBZBcUEX45QkJfu8tl0hPj-o
+      - REALTOR_API_KEY=${REALTOR_API_KEY:-2864528f82mshba9574a3640fc46p1453e8jsn82623ef4bd51}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
     depends_on:
       - postgres
     volumes:
