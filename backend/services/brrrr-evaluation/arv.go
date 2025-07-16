@@ -13,6 +13,12 @@ type ArvRequest struct {
 	ARV            float64 `json:"arv" binding:"required,min=1"`
 	FinancingCosts float64 `json:"financing_costs" binding:"min=0"`
 	SellingCosts   float64 `json:"selling_costs" binding:"min=0"`
+	MonthlyRent    float64 `json:"monthly_rent" binding:"min=0"`
+	VacancyRate    float64 `json:"vacancy_rate" binding:"min=0,max=1"`
+	AnnualExpenses float64 `json:"annual_expenses" binding:"min=0"`
+	RefinanceInterestRate float64 `json:"refinance_interest_rate" binding:"min=0"`
+	RefinanceLoanTerm     int     `json:"refinance_loan_term" binding:"min=0"`
+	RefinanceLTV          float64 `json:"refinance_ltv" binding:"min=0,max=1"`
 }
 
 // ArvResult represents the calculated ARV analysis results
@@ -39,6 +45,13 @@ type ArvResult struct {
 	// BRRRR Strategy metrics
 	BrrrrMaxOffer float64 `json:"brrrr_max_offer"`
 	BrrrrProfit   float64 `json:"brrrr_profit"`
+	BrrrrAnnualCashFlow float64 `json:"brrrr_annual_cash_flow"`
+	BrrrrCashOnCashROI  float64 `json:"brrrr_cash_on_cash_roi"`
+	BrrrrNetCashInDeal  float64 `json:"brrrr_net_cash_in_deal"`
+	BrrrrCashPulledOut  float64 `json:"brrrr_cash_pulled_out"`
+	BrrrrRefinanceAmount float64 `json:"brrrr_refinance_amount"`
+	BrrrrNOI            float64 `json:"brrrr_noi"`
+	BrrrrCapRate        float64 `json:"brrrr_cap_rate"`
 
 	// Risk assessment
 	RiskLevel       string   `json:"risk_level"`
